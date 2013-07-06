@@ -6,22 +6,17 @@ import java.util.Locale;
 import java.util.Set;
 
 import android.app.ActionBar;
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.FragmentTransaction;
 import android.content.*;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.*;
-import android.view.inputmethod.*;
 import android.widget.*;
 
 import java.util.ArrayList;
@@ -257,9 +252,9 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             List<String> list = new ArrayList<String>();
             SaveHandler sh = new SaveHandler();
 
-            /////////////////////////////////////////////////////////////TODO: REMOVE!!!!!!!!
+            //////////////////////////////////////////////////////////////TODO: REMOVE!!!!!!!!
             sh.put(1, "main", "number_of_saves", 4, dString, dBoolean, dSet);
-            /////////////////////////////////////////////////////////////TODO: REMOVE!!!!!!!!
+            //////////////////////////////////////////////////////////////TODO: REMOVE!!!!!!!!
 
             if (sh.loadInt("main", "number_of_saves") == 0) {
                 list.add(getString(R.string.no_saves_found));
