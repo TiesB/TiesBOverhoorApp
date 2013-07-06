@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/save_title_et"
+            android:layout_gravity="left|center_vertical"
+            android:singleLine="true"
+            android:hint="@string/title"/>
+
+    <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/save_language1_et"
+            android:layout_gravity="left|center_vertical"
+            android:singleLine="true"
+            android:hint="@string/language1"/>
+
+    <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/save_language2_et"
+            android:layout_gravity="left|center_vertical"
+            android:singleLine="true"
+            android:hint="@string/language2"/>
+
+    <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/save_button"
+            android:layout_gravity="center"
+            android:singleLine="false"
+            android:text="@string/enter_words"/>
+</LinearLayout>
