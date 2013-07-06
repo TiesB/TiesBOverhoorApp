@@ -6,12 +6,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -20,29 +22,29 @@ import java.util.Set;
 
 public class EnterWordsActivity extends Activity {
 
-    public final int dInt = 0;
-    public final String dString = "";
-    public final boolean dBoolean = false;
-    public Set<String> dSet;
+    private final int dInt = 0;
+    private final String dString = "";
+    private final boolean dBoolean = false;
+    private Set<String> dSet = new HashSet<String>();;
 
-    public SaveHandler sh = new SaveHandler();
-    public WordHandler wh = new WordHandler();
-    public FinishHandler fh = new FinishHandler();
+    private SaveHandler sh = new SaveHandler();
+    private WordHandler wh = new WordHandler();
+    private FinishHandler fh = new FinishHandler();
 
-    public String title;
-    public String language1;
-    public String language2;
-    public int words;
+    private String title;
+    private String language1;
+    private String language2;
+    private int words;
 
-    public EditText mLanguage1ET;
-    public EditText mLanguage2ET;
-    public Button mNextWordButton;
-    public Button mFinishButton;
+    private EditText mLanguage1ET;
+    private EditText mLanguage2ET;
+    private Button mNextWordButton;
+    private Button mFinishButton;
 
-    public String[] tempWordsLanguage1 = new String[100];
-    public String[] tempWordsLanguage2 = new String[100];
+    private String[] tempWordsLanguage1 = new String[100];
+    private String[] tempWordsLanguage2 = new String[100];
     
-    public Bundle intentStartBundle;
+    private Bundle intentStartBundle;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,7 +88,7 @@ public class EnterWordsActivity extends Activity {
     public void onPause() {
         super.onPause();
         //TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        Bundle saveBundle = getSaveBundle();
+        //Bundle saveBundle = getSaveBundle();
     }
 
     @Override
@@ -177,7 +179,8 @@ public class EnterWordsActivity extends Activity {
         public Set<String> loadSet (String save, String pref) {
             if (save.equals("main")) save = MAIN_SAVE;
             sp = getSharedPreferences(save, 0);
-            return sp.getStringSet(pref, dSet);
+            Set<String> ret = sp.getStringSet(pref, dSet);
+            return ret;
         }
     }
 

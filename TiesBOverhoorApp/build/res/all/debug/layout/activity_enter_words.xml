@@ -16,7 +16,8 @@
                 android:id="@+id/words_language1_et"
                 android:layout_gravity="center_horizontal|top"
                 android:layout_weight="1"
-                android:singleLine="true"/>
+                android:singleLine="true"
+                android:hint="@string/language1"/>
 
         <EditText
                 android:layout_width="fill_parent"
@@ -24,7 +25,9 @@
                 android:id="@+id/words_language2_et"
                 android:layout_gravity="center_horizontal|top"
                 android:layout_weight="1"
-                android:singleLine="true"/>
+                android:singleLine="true"
+                android:inputType="textCapCharacters"
+                android:hint="@string/language2"/>
     </LinearLayout>
 
     <Button

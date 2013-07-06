@@ -17,7 +17,7 @@
     <string name="name">Name</string>
     <string name="next_word">Next Word</string>
     <string name="no_saves_found">No saves found!</string>
-    <string name="quit_words">Are you sure you want to stop?</string>
+    <string name="quit_words">Are you sure you want to stop and lose all progress?</string>
     <string name="save">Save</string>
     <string name="title">Title</string>
     <string name="title_activity_test">TestActivity</string>

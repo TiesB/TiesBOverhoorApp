@@ -1,14 +1,11 @@
 package com.tiesb.overhoor;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Set;
-
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
-import android.content.*;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -16,11 +13,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
 
@@ -32,25 +31,27 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
      * intensive, it may be best to switch to a
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
-    SectionsPagerAdapter mSectionsPagerAdapter;
+    private SectionsPagerAdapter mSectionsPagerAdapter;
 
     /**
      * The {@link ViewPager} that will host the section contents.
      */
-    ViewPager mViewPager;
+    private ViewPager mViewPager;
 
-    public int dInt = 0;
-    public String dString = "";
-    public boolean dBoolean = false;
-    public Set<String> dSet;
+    private final int dInt = 0;
+    private final String dString = "";
+    private final boolean dBoolean = false;
+    private Set<String> dSet = new HashSet<String>();;
 
-    EditText mTitleET;
-    EditText mLanguage1ET;
-    EditText mLanguage2ET;
-    Button mSaveButton;
+    private SaveHandler sh = new SaveHandler();
 
-    Button mLoadButton;
-    Spinner mSpinner;
+    private EditText mTitleET;
+    private EditText mLanguage1ET;
+    private EditText mLanguage2ET;
+    private Button mSaveButton;
+
+    private Button mLoadButton;
+    private Spinner mSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,16 +69,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-
-        SaveHandler sh = new SaveHandler();
-        String swag[] = {"Ties", "B", "Swagger", "man"};
-        Set<String> stuur = new HashSet<String>(Arrays.asList(swag));
-        sh.put(4, "main", "ties", dInt, dString, dBoolean, stuur);
-        Set<String> ontvang = sh.loadSet("main" , "ties");
-        String sss[] = ontvang.toArray(new String[0]);
-        /*for (int i = 0; i < sss.length; i++) {
-            Toast.makeText(this, sss[i], Toast.LENGTH_LONG).show();
-        }*/
 
         // When swiping between different sections, select the corresponding
         // tab. We can also use ActionBar.Tab#select() to do this if we have
@@ -250,7 +241,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             mSpinner = (Spinner) rootView.findViewById(R.id.load_spinner);
 
             List<String> list = new ArrayList<String>();
-            SaveHandler sh = new SaveHandler();
 
             //////////////////////////////////////////////////////////////TODO: REMOVE!!!!!!!!
             sh.put(1, "main", "number_of_saves", 4, dString, dBoolean, dSet);
@@ -275,7 +265,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         View.OnClickListener loadButtonHandler = new View.OnClickListener() {
             public void onClick(View v) {
                 String sSaveName = String.valueOf(mSpinner.getSelectedItem());
-                SaveHandler sh = new SaveHandler();
                 String sLanguage1 = sh.loadString(sSaveName, "language1");
                 String sLanguage2 = sh.loadString(sSaveName, "language2");
                 int iNumberOfWords = sh.loadInt(sSaveName, "number_of_words");
@@ -367,7 +356,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             if (save.equals("main")) save = MAIN_SAVE;
             sp = getSharedPreferences(save, 0);
             String ret = sp.getString(pref, dString);
-            if (ret == "") Log.e("TiesB", "String " + pref + " has no value!");
+            if (ret.equals("")) Log.e("TiesB", "String " + pref + " has no value!");
             return ret;
         }
 
@@ -375,16 +364,15 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             if (save.equals("main")) save = MAIN_SAVE;
             sp = getSharedPreferences(save, 0);
             Boolean ret = sp.getBoolean(pref, dBoolean);
-            if (ret == false) Log.w("TiesB", "Boolean " + pref + " has no value or is false!");
+            if (!ret) Log.w("TiesB", "Boolean " + pref + " has no value or is false!");
             return ret;
         }
 
         public Set<String> loadSet (String save, String pref) {
             if (save.equals("main")) save = MAIN_SAVE;
             sp = getSharedPreferences(save, 0);
-            Set<String> ret = sp.getStringSet(pref, dSet);
-            //if (ret[0] == "") Log.e("TiesB", "Array " + pref + " has no value!")
-            return ret;
+            //Want this to process as fast as possible
+            return sp.getStringSet(pref, dSet);
         }
     }
 }
