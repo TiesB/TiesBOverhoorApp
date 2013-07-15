@@ -41,7 +41,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     private final int dInt = 0;
     private final String dString = "";
     private final boolean dBoolean = false;
-    private Set<String> dSet = new HashSet<String>();;
+    private final Set<String> dSet = new HashSet<String>();;
 
     private SaveHandler sh = new SaveHandler();
 
@@ -264,11 +264,11 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
         View.OnClickListener loadButtonHandler = new View.OnClickListener() {
             public void onClick(View v) {
-                String sSaveName = String.valueOf(mSpinner.getSelectedItem());
-                String sLanguage1 = sh.loadString(sSaveName, "language1");
-                String sLanguage2 = sh.loadString(sSaveName, "language2");
-                int iNumberOfWords = sh.loadInt(sSaveName, "number_of_words");
-                Set<String> words = sh.loadSet(sSaveName, "words");
+                String loadSaveName = String.valueOf(mSpinner.getSelectedItem());
+                String loadLanguage1 = sh.loadString(loadSaveName, "language1");
+                String loadLanguage2 = sh.loadString(loadSaveName, "language2");
+                int loadNumberOfWords = sh.loadInt(loadSaveName, "number_of_words");
+                Set<String> loadWords = sh.loadSet(loadSaveName, "words"); //TODO: Probably not necessary
             }
         };
     }
@@ -371,8 +371,9 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         public Set<String> loadSet (String save, String pref) {
             if (save.equals("main")) save = MAIN_SAVE;
             sp = getSharedPreferences(save, 0);
+            Set<String> ret = sp.getStringSet(pref, dSet);
             //Want this to process as fast as possible
-            return sp.getStringSet(pref, dSet);
+            return ret; //TODO: Test if this all works!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! (Eventhough I'm probably not going to use it)
         }
     }
 }

@@ -25,7 +25,7 @@ public class EnterWordsActivity extends Activity {
     private final int dInt = 0;
     private final String dString = "";
     private final boolean dBoolean = false;
-    private Set<String> dSet = new HashSet<String>();;
+    private final Set<String> dSet = new HashSet<String>();
 
     private SaveHandler sh = new SaveHandler();
     private WordHandler wh = new WordHandler();
@@ -102,7 +102,8 @@ public class EnterWordsActivity extends Activity {
     }
 
     public void onBackPressed() {
-        new AlertDialog.Builder(this)
+        if(mLanguage1ET.getText().toString().equals("") && mLanguage2ET.getText().toString().equals("")) {finish(); return;}
+            new AlertDialog.Builder(this)
                 .setMessage(getString(R.string.quit_words))
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
