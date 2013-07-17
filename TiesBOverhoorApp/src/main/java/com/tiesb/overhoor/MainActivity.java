@@ -315,6 +315,10 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                     saveBundle.putString("title", title);
                     saveBundle.putString("language1", language1);
                     saveBundle.putString("language2", language2);
+                    String[] emptyStringArray = new String[100];
+                    saveBundle.putStringArray("temp_words_language1", emptyStringArray);
+                    saveBundle.putStringArray("temp_words_language2", emptyStringArray);
+                    saveBundle.putInt("words", 0);
                     intent.putExtra("bundle", saveBundle);
                     startActivity(intent);
                 }

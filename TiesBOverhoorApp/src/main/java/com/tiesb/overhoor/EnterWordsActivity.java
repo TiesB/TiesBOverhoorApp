@@ -22,29 +22,29 @@ import java.util.Set;
 
 public class EnterWordsActivity extends Activity {
 
-    private final int dInt = 0;
-    private final String dString = "";
-    private final boolean dBoolean = false;
-    private final Set<String> dSet = new HashSet<String>();
+    final int dInt = 0;
+    final String dString = "";
+    final boolean dBoolean = false;
+    final Set<String> dSet = new HashSet<String>();
 
-    private SaveHandler sh = new SaveHandler();
-    private WordHandler wh = new WordHandler();
-    private FinishHandler fh = new FinishHandler();
+    SaveHandler sh = new SaveHandler();
+    WordHandler wh = new WordHandler();
+    FinishHandler fh = new FinishHandler();
 
-    private String title;
-    private String language1;
-    private String language2;
-    private int words;
+    String title;
+    String language1;
+    String language2;
+    int words;
 
-    private EditText mLanguage1ET;
-    private EditText mLanguage2ET;
-    private Button mNextWordButton;
-    private Button mFinishButton;
+    EditText mLanguage1ET;
+    EditText mLanguage2ET;
+    Button mNextWordButton;
+    Button mFinishButton;
 
-    private String[] tempWordsLanguage1 = new String[100];
-    private String[] tempWordsLanguage2 = new String[100];
+    String[] tempWordsLanguage1 = new String[100];
+    String[] tempWordsLanguage2 = new String[100];
     
-    private Bundle intentStartBundle;
+    Bundle intentStartBundle;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,10 +68,8 @@ public class EnterWordsActivity extends Activity {
             language1 = intentStartBundle.getString("language1");
             language2 = intentStartBundle.getString("language2");
             words = intentStartBundle.getInt("words", 0);
-            if (words > 1) {
-                tempWordsLanguage1 = intentStartBundle.getStringArray("temp_words_language1");
-                tempWordsLanguage2 = intentStartBundle.getStringArray("temp_words_language2");
-            }
+            tempWordsLanguage1 = intentStartBundle.getStringArray("temp_words_language1");
+            tempWordsLanguage2 = intentStartBundle.getStringArray("temp_words_language2");
         }
         if (words == 100) return;
         if (words == 0) {
@@ -88,7 +86,7 @@ public class EnterWordsActivity extends Activity {
     public void onPause() {
         super.onPause();
         //TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        //Bundle saveBundle = getSaveBundle();
+        //Bundle saveBundle = createSaveBundle();
     }
 
     @Override
@@ -118,8 +116,9 @@ public class EnterWordsActivity extends Activity {
                 .show();
     }
 
-    public Bundle getSaveBundle() {
+    public Bundle createSaveBundle() {
         Bundle saveBundle = intentStartBundle;
+        Toast.makeText(getApplicationContext(), tempWordsLanguage1[1], Toast.LENGTH_LONG).show();
         if (!tempWordsLanguage1[1].isEmpty()) {
             saveBundle.remove("words");
             saveBundle.remove("temp_words_language1");
@@ -185,11 +184,11 @@ public class EnterWordsActivity extends Activity {
         }
     }
 
-    public void reloadAcitivity () {
+    public void reloadActivity () {
         Intent intent = getIntent();
         finish();
 
-        Bundle saveBundle = getSaveBundle();
+        Bundle saveBundle = createSaveBundle();
         intent.putExtra("bundle", saveBundle);
 
         /*if (words > 1) {
@@ -210,17 +209,25 @@ public class EnterWordsActivity extends Activity {
     }
 
     public class FinishHandler {
-        private String save_prefix = "word_";
-
         View.OnClickListener finishButtonHandler = new View.OnClickListener() {
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), tempWordsLanguage2[2], Toast.LENGTH_LONG).show();
+                if (words > 0 && tempWordsLanguage1[words].equals("")) {
+                    Toast.makeText(getApplicationContext(), getString(R.string.enter_valid_data), Toast.LENGTH_LONG).show();
+                    Log.v("TiesB", "No correct input from user when pressing Enter Words button.");
+                } else {
+                    Intent intent = new Intent(getApplicationContext(), FinishActivity.class);
+                    Bundle saveBundle = new Bundle();
+                    saveBundle.putString("title", title);
+                    saveBundle.putString("language1", language1);
+                    saveBundle.putString("language2", language2);
+                    intent.putExtra("bundle", saveBundle);
+                    startActivity(intent);
+                }
             }
         };
     }
 
     public class WordHandler {
-
         public View.OnClickListener nextWordButtonHandler = new View.OnClickListener() {
             public void onClick(View v) {
                 String wordLanguage1 = mLanguage1ET.getText().toString();
@@ -230,7 +237,7 @@ public class EnterWordsActivity extends Activity {
                 }
                 else {
                     saveWordToTemp(wordLanguage1, wordLanguage2);
-                    reloadAcitivity();
+                    reloadActivity();
                 }
             }
         };
