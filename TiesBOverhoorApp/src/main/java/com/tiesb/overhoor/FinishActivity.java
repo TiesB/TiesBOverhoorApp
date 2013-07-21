@@ -57,10 +57,8 @@ public class FinishActivity extends Activity {
             language1 = intentStartBundle.getString("language1");
             language2 = intentStartBundle.getString("language2");
             words = intentStartBundle.getInt("words", 0);
-            if (words > 1) {
-                tempWordsLanguage1 = intentStartBundle.getStringArray("temp_words_language1");
-                tempWordsLanguage2 = intentStartBundle.getStringArray("temp_words_language2");
-            }
+            tempWordsLanguage1 = intentStartBundle.getStringArray("temp_words_language1");
+            tempWordsLanguage2 = intentStartBundle.getStringArray("temp_words_language2");
         }
 
         //TODO: Buttons & onClicks
@@ -70,7 +68,26 @@ public class FinishActivity extends Activity {
 
     private void saveToSave () {
         String saveName = SAVE_PREFIX + title;
-        Toast.makeText(getApplicationContext(), saveName, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, Integer.toString(words), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, saveName, Toast.LENGTH_LONG).show();
+
+        //Handle words on their own
+        for (int i = 1; i <= words; i++) {
+            Toast.makeText(this, tempWordsLanguage2[i], Toast.LENGTH_SHORT).show();
+            sh.putString(saveName, tempWordsLanguage1[i], tempWordsLanguage2[i]);
+        }
+
+        //Save to main save
+        int numberOfSaves = sh.loadInt("main", "number_of_saves");
+        sh.putInt("main", "number_of_saves", numberOfSaves + 1);
+        Set<String> oldSet = dSet;
+        try {
+            oldSet = sh.loadSet("main", "saves");
+        } catch (Exception e) {
+            Log.i("TiesBOverhoorApp", "No saves found when loading to save new save");
+        }
+        oldSet.add(title);
+        sh.putSet("main", "saves", oldSet);
     }
 
     public class SaveHandler {
@@ -81,20 +98,38 @@ public class FinishActivity extends Activity {
         private SharedPreferences sp;
         private SharedPreferences.Editor spe;
 
-        public void put (int type, String save, String pref, int input_int, String input_string, boolean input_boolean, Set<String> input_set) {
+        public void putInt (String save, String pref, int input) {
             if (save.equals("main")) save = MAIN_SAVE;
             sp = getSharedPreferences(save, 0);
             spe = sp.edit();
-            switch (type) {
-                case 1: spe.putInt(pref, input_int); break;
-                case 2: spe.putString(pref, input_string); break;
-                case 3: spe.putBoolean(pref, input_boolean); break;
-                case 4: spe.putStringSet(pref, input_set); break;
-                default: Log.e("TiesB", "No legit type: " + Integer.toString(type));
-            }
+            spe.putInt(pref, input);
             spe.commit();
         }
 
+        public void putString (String save, String pref, String input) {
+            if (save.equals("main")) save = MAIN_SAVE;
+            sp = getSharedPreferences(save, 0);
+            spe = sp.edit();
+            spe.putString(pref, input);
+            spe.commit();
+        }
+
+        public void putBoolean (String save, String pref, boolean input) {
+            if (save.equals("main")) save = MAIN_SAVE;
+            sp = getSharedPreferences(save, 0);
+            spe = sp.edit();
+            spe.putBoolean(pref, input);
+            spe.commit();
+        }
+
+        public void putSet (String save, String pref, Set<String> input) {
+            if (save.equals("main")) save = MAIN_SAVE;
+            sp = getSharedPreferences(save, 0);
+            spe = sp.edit();
+            spe.putStringSet(pref, input);
+            spe.commit();
+        }
+        
         public int loadInt (String save, String pref) {
             if (save.equals("main")) save = MAIN_SAVE;
             sp = getSharedPreferences(save, 0);

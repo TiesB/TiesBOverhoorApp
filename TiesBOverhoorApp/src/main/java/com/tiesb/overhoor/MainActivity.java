@@ -41,7 +41,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     private final int dInt = 0;
     private final String dString = "";
     private final boolean dBoolean = false;
-    private final Set<String> dSet = new HashSet<String>();;
+    private final Set<String> dSet = new HashSet<String>();
 
     private SaveHandler sh = new SaveHandler();
 
@@ -242,20 +242,23 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
             List<String> list = new ArrayList<String>();
 
-            //////////////////////////////////////////////////////////////TODO: REMOVE!!!!!!!!
-            sh.put(1, "main", "number_of_saves", 4, dString, dBoolean, dSet);
-            //////////////////////////////////////////////////////////////TODO: REMOVE!!!!!!!!
-
             if (sh.loadInt("main", "number_of_saves") == 0) {
                 list.add(getString(R.string.no_saves_found));
                 mLoadButton.setEnabled(false);
                 mLoadButton.setClickable(false);
             } else {
-                list.addAll(sh.loadSet("main", "ties"));
+                try {
+                    list.addAll(sh.loadSet("main", "saves"));
+                } catch (Exception e) {
+                   Log.e("TiesBOverHoorApp", "Can't load saves, but number_of_saves > 0");
+                }
+                if (list.isEmpty()) {
+                    list.add(getString(R.string.no_saves_found));
+                }
                 mLoadButton.setEnabled(true);
                 mLoadButton.setClickable(true);
             }
-            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.spinner_item, list);
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(MainActivity.this, R.layout.spinner_item, list);
             dataAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
             mSpinner.setAdapter(dataAdapter);
 
@@ -265,10 +268,11 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         View.OnClickListener loadButtonHandler = new View.OnClickListener() {
             public void onClick(View v) {
                 String loadSaveName = String.valueOf(mSpinner.getSelectedItem());
-                String loadLanguage1 = sh.loadString(loadSaveName, "language1");
-                String loadLanguage2 = sh.loadString(loadSaveName, "language2");
-                int loadNumberOfWords = sh.loadInt(loadSaveName, "number_of_words");
-                Set<String> loadWords = sh.loadSet(loadSaveName, "words"); //TODO: Probably not necessary
+                Intent intent = new Intent(getApplicationContext(), TestActivity.class);
+                Bundle saveBundle = new Bundle();
+                saveBundle.putString("title", loadSaveName);
+                intent.putExtra("bundle", saveBundle);
+                startActivity(intent);
             }
         };
     }
@@ -334,17 +338,35 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         private SharedPreferences sp;
         private SharedPreferences.Editor spe;
 
-        public void put (int type, String save, String pref, int input_int, String input_string, boolean input_boolean, Set<String> input_set) {
+        public void putInt (String save, String pref, int input) {
             if (save.equals("main")) save = MAIN_SAVE;
             sp = getSharedPreferences(save, 0);
             spe = sp.edit();
-            switch (type) {
-                case 1: spe.putInt(pref, input_int); break;
-                case 2: spe.putString(pref, input_string); break;
-                case 3: spe.putBoolean(pref, input_boolean); break;
-                case 4: spe.putStringSet(pref, input_set); break;
-                default: Log.e("TiesB", "No legit type: " + Integer.toString(type));
-            }
+            spe.putInt(pref, input);
+            spe.commit();
+        }
+
+        public void putString (String save, String pref, String input) {
+            if (save.equals("main")) save = MAIN_SAVE;
+            sp = getSharedPreferences(save, 0);
+            spe = sp.edit();
+            spe.putString(pref, input);
+            spe.commit();
+        }
+
+        public void putBoolean (String save, String pref, boolean input) {
+            if (save.equals("main")) save = MAIN_SAVE;
+            sp = getSharedPreferences(save, 0);
+            spe = sp.edit();
+            spe.putBoolean(pref, input);
+            spe.commit();
+        }
+
+        public void putSet (String save, String pref, Set<String> input) {
+            if (save.equals("main")) save = MAIN_SAVE;
+            sp = getSharedPreferences(save, 0);
+            spe = sp.edit();
+            spe.putStringSet(pref, input);
             spe.commit();
         }
 
@@ -376,8 +398,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             if (save.equals("main")) save = MAIN_SAVE;
             sp = getSharedPreferences(save, 0);
             Set<String> ret = sp.getStringSet(pref, dSet);
-            //Want this to process as fast as possible
-            return ret; //TODO: Test if this all works!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! (Eventhough I'm probably not going to use it)
+            return ret;
         }
     }
 }

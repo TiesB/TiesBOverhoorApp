@@ -26,7 +26,6 @@
                 android:layout_gravity="center_horizontal|top"
                 android:layout_weight="1"
                 android:singleLine="true"
-                android:inputType="textCapCharacters"
                 android:hint="@string/language2"/>
     </LinearLayout>
 

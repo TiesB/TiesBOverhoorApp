@@ -27,7 +27,6 @@ public class EnterWordsActivity extends Activity {
     final boolean dBoolean = false;
     final Set<String> dSet = new HashSet<String>();
 
-    SaveHandler sh = new SaveHandler();
     WordHandler wh = new WordHandler();
     FinishHandler fh = new FinishHandler();
 
@@ -130,60 +129,6 @@ public class EnterWordsActivity extends Activity {
         return saveBundle;
     }
 
-    public class SaveHandler {
-        //Mode: 1 for saving, 2 for loading
-        //Type: 1 for int, 2 for String, 3 for boolean, 4 for set
-
-        private final String MAIN_SAVE = "tiesb_mainsave";
-        private SharedPreferences sp;
-        private SharedPreferences.Editor spe;
-
-        public void put (int type, String save, String pref, int input_int, String input_string, boolean input_boolean, Set<String> input_set) {
-            if (save.equals("main")) save = MAIN_SAVE;
-            sp = getSharedPreferences(save, 0);
-            spe = sp.edit();
-            switch (type) {
-                case 1: spe.putInt(pref, input_int); break;
-                case 2: spe.putString(pref, input_string); break;
-                case 3: spe.putBoolean(pref, input_boolean); break;
-                case 4: spe.putStringSet(pref, input_set); break;
-                default: Log.e("TiesB", "No legit type: " + Integer.toString(type));
-            }
-            spe.commit();
-        }
-
-        public int loadInt (String save, String pref) {
-            if (save.equals("main")) save = MAIN_SAVE;
-            sp = getSharedPreferences(save, 0);
-            int ret = sp.getInt(pref, dInt);
-            if (ret == 0) Log.w("TiesB", "Integer " + pref + " has no value or is zero. Probably bad!");
-            return ret;
-        }
-
-        public String loadString (String save, String pref) {
-            if (save.equals("main")) save = MAIN_SAVE;
-            sp = getSharedPreferences(save, 0);
-            String ret = sp.getString(pref, dString);
-            if (ret.equals("")) Log.e("TiesB", "String " + pref + " has no value!");
-            return ret;
-        }
-
-        public Boolean loadBoolean (String save, String pref) {
-            if (save.equals("main")) save = MAIN_SAVE;
-            sp = getSharedPreferences(save, 0);
-            Boolean ret = sp.getBoolean(pref, dBoolean);
-            if (!ret) Log.w("TiesB", "Boolean " + pref + " has no value or is false!");
-            return ret;
-        }
-
-        public Set<String> loadSet (String save, String pref) {
-            if (save.equals("main")) save = MAIN_SAVE;
-            sp = getSharedPreferences(save, 0);
-            Set<String> ret = sp.getStringSet(pref, dSet);
-            return ret;
-        }
-    }
-
     public void reloadActivity () {
         Intent intent = getIntent();
         finish();
@@ -216,10 +161,7 @@ public class EnterWordsActivity extends Activity {
                     Log.v("TiesB", "No correct input from user when pressing Enter Words button.");
                 } else {
                     Intent intent = new Intent(getApplicationContext(), FinishActivity.class);
-                    Bundle saveBundle = new Bundle();
-                    saveBundle.putString("title", title);
-                    saveBundle.putString("language1", language1);
-                    saveBundle.putString("language2", language2);
+                    Bundle saveBundle = createSaveBundle();
                     intent.putExtra("bundle", saveBundle);
                     startActivity(intent);
                 }
